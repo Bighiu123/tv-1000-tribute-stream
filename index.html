@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV1000 Tribute</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body, html { height: 100%; background: #000; overflow: hidden; color: white; }
+
+        /* Sfondo Video */
+        #video-bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        #video-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 2; display: none; }
+
+        /* Schermata Login TRASPARENTE */
+        #login-screen { position: fixed; width: 100%; height: 100%; display: none; justify-content: center; align-items: center; z-index: 10; opacity: 0; transition: opacity 0.8s; }
+        .login-card { background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(15px); padding: 40px; border-radius: 8px; width: 450px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .welcome-msg { display: block; font-size: 1rem; letter-spacing: 4px; color: #0047FF; text-transform: uppercase; font-weight: 900; margin-bottom: 20px; }
+        .login-logo { width: 200px; margin-bottom: 30px; }
+        
+        .disclaimer-text { font-size: 0.75rem; color: rgba(255, 255, 255, 0.6); margin-top: 25px; line-height: 1.4; text-align: justify; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+        
+        button { width: 100%; padding: 15px; margin-top: 10px; background: #0047FF; color: white; border: none; border-radius: 4px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #0036cc; transform: scale(1.02); }
+
+        /* Dashboard post-login TRASPARENTE E BLUR */
+        #main-content { 
+            position: fixed; 
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 20; 
+            padding: 40px 4%; 
+            display: none; 
+            opacity: 0; 
+            transition: opacity 1s; 
+            overflow-y: auto; 
+            background: rgba(0, 0, 0, 0.65); 
+            backdrop-filter: blur(15px);     
+            -webkit-backdrop-filter: blur(15px);
+            text-align: center;
+        }
+        
+        .main-icon { width: 200px; margin-bottom: 20px; cursor: pointer; transition: 0.3s; }
+        .main-icon:hover { transform: scale(1.05); }
+
+        /* Info Panel */
+        #stream-info-panel {
+            display: none;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #0047FF;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            margin: 0 auto 20px auto;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #fff;
+        }
+
+        .movie-grid { display: flex; gap: 25px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
+        .movie-card { width: 220px; cursor: pointer; transition: transform 0.3s ease; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 15px; text-align: center; }
+        .movie-card:hover { transform: scale(1.05); background: rgba(0, 71, 255, 0.2); }
+        .movie-card img { width: 100%; height: 280px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; }
+
+        /* Fullscreen Fix */
+        #player-layer:fullscreen { width: 100%; height: 100%; }
+        #player-layer:-webkit-full-screen { width: 100%; height: 100%; }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        /* Screen Bug Logo */
+        #screen-bug {
+            position: absolute;
+            top: 5px;
+            right: 220px; 
+            width: 250px; 
+            opacity: 1;
+            z-index: 2147483647;
+            display: none;
+            pointer-events: none;
+        }
+
+        #v-cinema {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="video-bg-container">
+        <video id="intro-video" autoplay muted playsinline><source src="ID/ID.mp4" type="video/mp4"></video>
+        <div id="video-overlay"></div>
+    </div>
+
+    <div id="login-screen">
+        <div class="login-card">
+            <span class="welcome-msg">Welcome to TV1000 Tribute</span>
+            <img src="Logo/TV1000.png" alt="TV1000" class="login-logo">
+            
+            <form id="login-form">
+                <button type="submit">ENTER</button>
+            </form>
+
+            <div class="disclaimer-text">
+                Disclaimer: This is an unofficial, fan-created stream inspired by TV1000. All trademarks, logos, and content belong to their respective owners. This project is not endorsed, sponsored, or affiliated with any official TV1000 entities. Created for non-commercial and entertainment purposes only.
+            </div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <img src="Icon/TV1000.png" alt="Icon" class="main-icon" onclick="toggleInfo()">
+        
+        <div id="stream-info-panel">
+        <br><br> Welcome to fan-made tribute to TV1000 — the home of Classic Hollywood and timeless cinema. This stream celebrates the great classics of film history, featuring a curated selection of black-and-white and color masterpieces that have made generations dream, presented without commercial interruptions.
+            TV1000 Tribute is an independent, fan-made project. Not affiliated with any official TV1000 entity.
+        </div>
+
+        <h1>WELCOME TO TV1000 FAN TRIBUTE — THE HOME OF CLASSIC HOLLYWOOD.</h1>
+        <div class="movie-grid">
+            <div class="movie-card" onclick="playMovie('https://ia801804.us.archive.org/24/items/the-general-keaton-and-bruckman-1926-high-quality-1080p-t-o-p-swu-fc/The_General_Keaton_and_Bruckman_1926_High_Quality_1080p-T_O-pSwu-fc.mp4')"><img src="Banner/Banner1.png"><p>The General 1926</p></div>
+            <div class="movie-card" onclick="playMovie('https://dn710109.ca.archive.org/0/items/sherlock.-jr..-1924.1080p.-blu-ray.x-264-yts.-am/Sherlock.Jr..1924.1080p.BluRay.x264-%5BYTS.AM%5D.mp4')"><img src="Banner/Banner2.png"><p>Sherlock Jr. 1924</p></div>
+            <div class="movie-card" onclick="playMovie('https://dn720407.ca.archive.org/0/items/sunrise-a-song-of-two-humans-f.-w.-murnau-1927/Sunrise%20A%20Song%20of%20Two%20Humans%20-%20F.W.%20Murnau%20%281927%29.mp4')"><img src="Banner/Banner3.png"><p>Sunrise: A Song of Two Humans 1927</p></div>
+            <div class="movie-card" onclick="playMovie('https://dn710703.ca.archive.org/0/items/HELLSHINGES1916WilliamS.Hart/HELL%2527S%20HINGES%20%281916%29%20--%20William%20S.%20Hart.mp4')"><img src="Banner/Banner4.png"><p>Hell's Hinges 1916</p></div>
+            <div class="movie-card" onclick="playMovie('https://dn710906.ca.archive.org/0/items/Cops1922/Cops-v2.mp4')"><img src="Banner/Banner5.png"><p>Cops 1922</p></div>
+            <div class="movie-card" onclick="playMovie('https://dn711305.ca.archive.org/0/items/TheGreatTrainRobbery1903/TheGreatTrainRobbery1903.mp4')"><img src="Banner/Banner6.png"><p>The Great Train Robbery 1903</p></div>
+            <div class="movie-card" onclick="playMovie('https://ia601408.us.archive.org/30/items/his_girl_friday/his_girl_friday_512kb.mp4')"><img src="Banner/Banner7.png"><p>His Girl Friday 1940</p></div>
+            <div class="movie-card" onclick="playMovie('https://dn720301.ca.archive.org/0/items/7.3-d.-o.-a.-1949/7.3%20D.O.A.%C2%A0%281949%29%C2%A0.mp4')"><img src="Banner/Banner8.png"><p>7.3 D.O.A. 1949</p></div>
+            <div class="movie-card" onclick="playMovie('https://dn710602.ca.archive.org/0/items/penny_serenade/penny_serenade.mp4')"><img src="Banner/Banner9.png"><p>Penny Serenade 1941</p></div>
+            <div class="movie-card" onclick="playMovie('https://ia801501.us.archive.org/1/items/ThePhantomoftheOpera/Phantom_of_the_Opera_512kb.mp4')"><img src="Banner/Banner10.png"><p>The Phantom of the Opera 1925</p></div>     
+       
+       
+       
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('intro-video');
+        const login = document.getElementById('login-screen');
+        const overlay = document.getElementById('video-overlay');
+        const main = document.getElementById('main-content');
+
+        let currentShortIdx = 0;
+        let currentSecondaryIdx = 0;
+        let currentTertiaryIdx = 0;
+
+        function toggleInfo() {
+            const panel = document.getElementById('stream-info-panel');
+            panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function openLogin() { video.pause(); overlay.style.display = 'block'; login.style.display = 'flex'; setTimeout(() => { login.style.opacity = '1'; }, 50); }
+        video.onended = openLogin;
+        video.onerror = openLogin;
+
+        document.getElementById('login-form').onsubmit = (e) => {
+            e.preventDefault();
+            login.style.opacity = "0"; 
+            const audio = new Audio('Audio/TV1000.mp3');
+            audio.play();
+            setTimeout(() => { 
+                login.style.display = "none"; 
+                overlay.style.display = "none"; 
+                main.style.display = "block"; 
+                video.loop = true;
+                video.play();
+                setTimeout(() => { main.style.opacity = "1"; }, 100); 
+            }, 600);
+        };
+
+        function closeCinema() {
+            const p = document.getElementById('player-layer');
+            if(p) p.remove();
+        }
+
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                closeCinema();
+            }
+        });
+        document.addEventListener('webkitfullscreenchange', () => {
+            if (!document.webkitIsFullScreen) {
+                closeCinema();
+            }
+        });
+
+        function playMovie(url) {
+            if(!url) return;
+            const shorts = ['ID/ID.mp4', 'ID/ID_2.mp4', 'ID/ID_3.mp4'];
+            const secondary = ['ID/ID_4.mp4', 'ID/ID_5.mp4', 'ID/ID_6.mp4', 'ID/ID_7.mp4', 'ID/ID_8.mp4', 'ID/ID_9.mp4', 'ID/ID_10.mp4', 'ID/ID_11.mp4', 'ID/ID_12.mp4', 'ID/ID_13.mp4', 'ID/ID_14.mp4', 'ID/ID_15.mp4'];
+            const tertiary = ['ID/ID_16.mp4', 'ID/ID_17.mp4' , "ID/ID_18.mp4"];
+
+            const p = document.createElement('div');
+            p.id = 'player-layer';
+            p.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:10000; display:flex; align-items:center; justify-content:center;";
+            p.innerHTML = `
+                <div class="video-wrapper">
+                    <img id="screen-bug" src="Logo/TV1000.png" alt="logo">
+                    <video id="v-cinema" controls autoplay style="width: 100%; height: 100%; background:#000;"></video>
+                </div>
+            `;
+            document.body.appendChild(p);
+
+            if (p.requestFullscreen) p.requestFullscreen();
+            else if (p.webkitRequestFullscreen) p.webkitRequestFullscreen();
+
+            const v = document.getElementById('v-cinema');
+            const bug = document.getElementById('screen-bug');
+            let stage = 0;
+
+            const changeSource = (src) => {
+                v.src = src;
+                v.load();
+                v.play();
+            };
+
+            // START: Play Primary Short ID (ID 1-3)
+            changeSource(shorts[currentShortIdx]);
+            currentShortIdx = (currentShortIdx + 1) % shorts.length;
+
+            v.onended = () => {
+                stage++;
+                if (stage === 1) {
+                    // Stage 1: Secondary ID (ID 4-15)
+                    changeSource(secondary[currentSecondaryIdx]);
+                    currentSecondaryIdx = (currentSecondaryIdx + 1) % secondary.length;
+                } else if (stage === 2) {
+                    // Stage 2: THE MOVIE
+                    bug.style.display = 'block';
+                    changeSource(url);
+                } else if (stage === 3) {
+                    // Stage 3: OUTRO - Only Tertiary Idents (ID 16-17)
+                    bug.style.display = 'none';
+                    changeSource(tertiary[currentTertiaryIdx]);
+                    currentTertiaryIdx = (currentTertiaryIdx + 1) % tertiary.length;
+                } else {
+                    // END: Close Player
+                    if (document.exitFullscreen) document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                    closeCinema();
+                }
+            };
+        }
+    </script>
+</body>
+</html>
